@@ -1,0 +1,1 @@
+import{j as t}from"./index.js";import{O as e}from"./reactRouterDom.js";import"./antd.js";import"./zustand.js";const n=()=>t.jsx("div",{style:{display:"flex",justifyContent:"center",alignItems:"center",height:"100vh",width:"100vw"},children:t.jsx(e,{})});export{n as default};
