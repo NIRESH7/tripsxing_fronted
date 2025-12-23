@@ -256,7 +256,7 @@ export default function Coupon() {
             <div className="bg-yellow-400 p-4 flex flex-col justify-between sm:w-3/4 w-full">
               <div>
                 <h2 className="text-white text-xl sm:text-3xl font-bold">
-                  Name - {coupon.name}
+                  Name - {coupon.name.toUpperCase()}
                 </h2>
                 <p className="text-white text-sm">
                   Total Claimed: {coupon.user.length}
@@ -285,8 +285,10 @@ export default function Coupon() {
             name="name"
             label="Name"
             rules={[{ required: true, message: "Please input the name!" }]}
+            getValueProps={(value) => ({ value: value?.toUpperCase() })}
+            normalize={(value) => value?.toUpperCase()}
           >
-            <Input placeholder="Enter coupon name" />
+            <Input placeholder="Enter coupon name" style={{ textTransform: 'uppercase' }} />
           </Form.Item>
           <Form.Item
             name="discount"
@@ -302,13 +304,12 @@ export default function Coupon() {
                   if (
                     !isNaN(numberValue) &&
                     Number.isInteger(numberValue) &&
-                    numberValue >= 1 &&
-                    numberValue <= 100
+                    numberValue >= 1
                   ) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    "Discount must be a whole number between 1 and 100"
+                    "Discount must be a whole number greater than 0"
                   );
                 },
               },
@@ -331,7 +332,13 @@ export default function Coupon() {
               { required: true, message: "Please select the expiry date" },
             ]}
           >
-            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+            <DatePicker
+              format="YYYY-MM-DD"
+              style={{ width: "100%" }}
+              disabledDate={(current) => {
+                return current && current < moment().startOf('day');
+              }}
+            />
           </Form.Item>
 
           {/* Modern information display with truncation for long user lists */}
