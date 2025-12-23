@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Table,
@@ -12,7 +13,6 @@ import {
   Tooltip,
   Tag,
   InputNumber,
-  AutoComplete,
 } from "antd";
 import {
   EyeOutlined,
@@ -61,6 +61,33 @@ export interface StayFormField {
   Users: User[];
 }
 
+// Wrapper for Google Maps Place Picker Web Component
+const PlacePicker = ({ onPlaceSelect, type = "", placeholder = "" }: any) => {
+  const ref = useRef<any>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      const listener = async (e: any) => {
+        const place = e.detail.place;
+        if (place) {
+          await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+          const value = type.includes('cities') ? place.displayName : place.formattedAddress;
+          onPlaceSelect(value);
+        }
+      };
+      ref.current.addEventListener("gmp-places-place-select", listener);
+      return () => {
+        if (ref.current) ref.current.removeEventListener("gmp-places-place-select", listener);
+      }
+    }
+  }, [ref, type]);
+
+  return (
+    // @ts-ignore
+    <gmp-place-picker ref={ref} type={type} placeholder={placeholder} style={{ width: '100%' }}></gmp-place-picker>
+  );
+};
+
 const StayPage: React.FC = () => {
   const [modalState, setModalState] = useState({
     isCreateVisible: false,
@@ -101,34 +128,6 @@ const StayPage: React.FC = () => {
         }
       ).CurrentUserData.id
   );
-
-  const [addressOptions, setAddressOptions] = useState<{ value: string; label: string }[]>([]);
-  const [cityOptionsSearch, setCityOptionsSearch] = useState<{ value: string; label: string }[]>([]);
-
-  const fetchPlaceSuggestions = (value: string, type: 'address' | 'city') => {
-    if (!value || !window.google) return;
-
-    const service = new window.google.maps.places.AutocompleteService();
-    const request = {
-      input: value,
-      componentRestrictions: { country: "in" },
-      types: type === 'city' ? ['(cities)'] : undefined,
-    };
-
-    service.getPlacePredictions(request, (predictions, status) => {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
-        const options = predictions.map((prediction) => ({
-          value: prediction.description,
-          label: prediction.description,
-        }));
-        if (type === 'address') setAddressOptions(options);
-        else setCityOptionsSearch(options);
-      } else {
-        if (type === 'address') setAddressOptions([]);
-        else setCityOptionsSearch([]);
-      }
-    });
-  };
 
   useEffect(() => {
     if (CountryData) {
@@ -833,30 +832,17 @@ const StayPage: React.FC = () => {
           <InputNumber defaultValue={0} />
         </Form.Item>
         <Form.Item name="address" label="Address" rules={[{ required: true }]}>
-          <AutoComplete
-            options={addressOptions}
-            onSearch={(value) => fetchPlaceSuggestions(value, 'address')}
-            placeholder="Search address"
+          <PlacePicker
+            onPlaceSelect={(val: string) => form.setFieldValue("address", val)}
+            placeholder="Search Address"
           />
         </Form.Item>
         <Form.Item name="city" label="City" rules={[{ required: true }]}>
-          <AutoComplete
-            options={cityOptionsSearch}
-            onSearch={(value) => fetchPlaceSuggestions(value, 'city')}
-            placeholder="Type to search city"
+          <PlacePicker
+            type="(cities)"
+            onPlaceSelect={(val: string) => form.setFieldValue("city", val)}
+            placeholder="Search City"
           />
-          {/* <Select
-            showSearch
-            allowClear
-            options={CityData?.map((city) => ({
-              value: city.id,
-              label: city.name,
-            }))}
-            onChange={(value) => handleAutopopulate(value)}
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-          /> */}
         </Form.Item>
         <Form.Item name="state" label="State" rules={[{ required: true }]}>
           <Select
