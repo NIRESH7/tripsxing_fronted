@@ -61,7 +61,7 @@ export interface StayFormField {
   Users: User[];
 }
 
-import OSMAutocomplete from "@/components/OSMAutocomplete";
+import GoogleMapsAutocomplete from "@/components/GoogleMapsAutocomplete";
 
 // Wrapper for Google Maps Place Picker Web Component
 const PlacePicker = ({ onPlaceSelect, type = "", placeholder = "" }: any) => {
@@ -536,7 +536,7 @@ const StayPage: React.FC = () => {
       address: record.address,
       email: record.email,
       description: record.description,
-      contact: record.contact,
+      contact: Array.isArray(record.contact) ? record.contact : [record.contact],
       price: record.price,
       country: record.country,
       state: record.state,
@@ -842,11 +842,22 @@ const StayPage: React.FC = () => {
           label="Contact Number"
           rules={[{ required: true }]}
         >
-          <Input />
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="Enter contact numbers"
+            tokenSeparators={[',']}
+          />
         </Form.Item>
 
-        <Form.Item name="price" label="Price" rules={[{ required: true }]}>
-          <InputNumber defaultValue={0} />
+        <Form.Item name="price" label="Price" rules={[{ required: true, type: 'number', message: 'Please enter a valid number' }]}>
+          <InputNumber
+            style={{ width: '100%' }}
+            min={0}
+            defaultValue={0}
+            formatter={(value) => `${value}`.replace(/\D/g, '')} // Remove non-digits for display
+            parser={(value) => value?.replace(/\D/g, '') as unknown as number} // Parse only digits
+          />
         </Form.Item>
 
         <Form.Item
@@ -854,14 +865,14 @@ const StayPage: React.FC = () => {
           name="address"
           rules={[{ required: true, message: "Please input address!" }]}
         >
-          <OSMAutocomplete
+          <GoogleMapsAutocomplete
             placeholder="Search for an address"
             onChange={(val) => form.setFieldValue('address', val)}
             onSelect={(val, option) => {
               console.log("Selected Address:", val, option);
               form.setFieldValue('address', val);
               if (option.lat && option.lon) {
-                setCoordinates({ lat: parseFloat(option.lat), lon: parseFloat(option.lon) });
+                setCoordinates({ lat: Number(option.lat), lon: Number(option.lon) });
                 console.log("Coordinates Set:", option.lat, option.lon);
               }
             }}
