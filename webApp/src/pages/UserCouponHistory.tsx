@@ -84,7 +84,7 @@ const UserCouponHistory = () => {
                     title: 'Discount',
                     dataIndex: 'percentageDiscount',
                     key: 'percentageDiscount',
-                    render: (discount: number) => `${Number(discount).toFixed(2)}%`,
+                    render: (discount: number) => `${Number(discount)}`,
                 },
                 {
                     title: 'Expiry Date',

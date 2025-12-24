@@ -14,6 +14,8 @@ import { UserData } from "@/interfaces/interfaces";
 export interface Coupoun {
   id: number;
   percentageDiscount: number;
+  discount?: number;
+  discountValue: string;
   expireDate: Date;
   isClaimed: boolean;
   code: string;
@@ -84,7 +86,7 @@ export default function Coupon() {
     setIsEditing(true);
     form.setFieldsValue({
       ...coupon,
-      discount: coupon.percentageDiscount,
+      discount: coupon.discountValue || coupon.discount || coupon.percentageDiscount,
       ExpiryDate: moment(coupon.expireDate),
     });
     setIsModalVisible(true);
@@ -98,6 +100,8 @@ export default function Coupon() {
           const formattedValues = {
             ...values,
             expiryDate: values.ExpiryDate.toISOString(), // Convert to ISO format for the database
+            // Map discount to percentageDiscount for backend
+            percentageDiscount: Number(values.discount),
           };
           console.log("Create:", values);
           console.log("Create:", formattedValues);
@@ -134,6 +138,8 @@ export default function Coupon() {
           const formattedValues = {
             ...values,
             expiryDate: values.ExpiryDate.toISOString(), // Convert to ISO format for the database
+            // Map discount to percentageDiscount for backend
+            percentageDiscount: Number(values.discount),
           };
           const data = {
             ...formattedValues,
@@ -242,7 +248,7 @@ export default function Coupon() {
 
             <div className="bg-pink-500 text-yellow-300 p-4 flex items-center justify-center sm:w-1/3 w-full">
               <div className="text-3xl sm:text-3xl font-bold">
-                {Number(coupon.percentageDiscount).toFixed(2)}%
+                {coupon.discountValue || coupon.discount || coupon.percentageDiscount || 0}
               </div>
             </div>
             <div className="relative">
