@@ -247,7 +247,7 @@ export default function Coupon() {
             <div className="absolute right-0 top-1/2 w-4 h-8 bg-white -mr-2 rounded-l-full transform -translate-y-1/2"></div>
 
             <div className="bg-pink-500 text-yellow-300 p-4 flex items-center justify-center sm:w-1/3 w-full">
-              <div className="text-3xl sm:text-3xl font-bold">
+              <div className="text-3xl sm:text-3xl font-bold break-all whitespace-normal text-center overflow-hidden max-h-full">
                 {coupon.discountValue || coupon.discount || coupon.percentageDiscount || 0}
               </div>
             </div>
@@ -261,7 +261,7 @@ export default function Coupon() {
             </div>
             <div className="bg-yellow-400 p-4 flex flex-col justify-between sm:w-3/4 w-full">
               <div>
-                <h2 className="text-white text-xl sm:text-3xl font-bold">
+                <h2 className="text-white text-xl sm:text-3xl font-bold break-all whitespace-normal overflow-hidden line-clamp-2">
                   Name - {coupon.name.toUpperCase()}
                 </h2>
                 <p className="text-white text-sm">

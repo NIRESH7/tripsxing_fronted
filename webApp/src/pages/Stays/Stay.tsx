@@ -61,6 +61,8 @@ export interface StayFormField {
   Users: User[];
 }
 
+import OSMAutocomplete from "@/components/OSMAutocomplete";
+
 // Wrapper for Google Maps Place Picker Web Component
 const PlacePicker = ({ onPlaceSelect, type = "", placeholder = "" }: any) => {
   const ref = useRef<any>(null);
@@ -446,6 +448,8 @@ const StayPage: React.FC = () => {
     routes: route.backend.uploadfile,
   });
 
+  const [coordinates, setCoordinates] = useState<{ lat: number; lon: number } | null>(null);
+
   const handleCreate = async () => {
     form
       .validateFields()
@@ -464,16 +468,22 @@ const StayPage: React.FC = () => {
           specialFacilities: values.specialFacilities,
           videos: values.videos,
           rating: 1,
+          latitude: coordinates?.lat || 0,
+          longitude: coordinates?.lon || 0,
         };
+        console.log("Submitting Data:", data);
+        console.log("Form Values (Raw):", values);
         saveData(data, {
           onSuccess: async (stayResponse) => {
             console.log("Stay created:", stayResponse);
 
             // Prepare FormData for file upload
             const formData = new FormData();
-            values.images.fileList.forEach((file: { originFileObj: File }) => {
-              formData.append("files", file.originFileObj);
-            });
+            if (values.images && values.images.fileList) {
+              values.images.fileList.forEach((file: { originFileObj: File }) => {
+                formData.append("files", file.originFileObj);
+              });
+            }
             //     if(values.videos!=undefined){
             //     values.videos.fileList.forEach((file: {
             //         originFileObj: File;
@@ -595,6 +605,8 @@ const StayPage: React.FC = () => {
           cityId: cityId,
           adminId: UserID,
           rating: 1,
+          latitude: values.latitude,
+          longitude: values.longitude,
           videos: values.videos,
           specialFacilities: values.specialFacilities,
           userId: localStorage.getItem("TripxingUserData")
@@ -793,34 +805,38 @@ const StayPage: React.FC = () => {
       width={800}
     >
       <Form
-        form={formInstance}
+        form={form}
         layout="horizontal"
         name="basic"
         initialValues={{ remember: true }}
         colon={false}
         labelCol={{ span: 4 }}
-        wrapperCol={{ span: 24 }}
+        wrapperCol={{ span: 14 }}
       >
         <Form.Item
-          name="stayName"
           label="Stay Name"
-          rules={[{ required: true }]}
+          name="stayName"
+          rules={[{ required: true, message: "Please input stay name!" }]}
         >
           <Input />
         </Form.Item>
+
         <Form.Item
-          name="description"
           label="Description"
-          rules={[{ required: false }]}
+          name="description"
+          rules={[{ required: true, message: "Please input description!" }]}
         >
           <Input.TextArea />
         </Form.Item>
-        {/* Email */}
-        {/* {title !== "Edit Stay" && ( */}
+
+        {/* Lat/Lon Hidden Fields */}
+        <Form.Item name="latitude" hidden><Input /></Form.Item>
+        <Form.Item name="longitude" hidden><Input /></Form.Item>
+
         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        {/* )} */}
+
         <Form.Item
           name="contact"
           label="Contact Number"
@@ -828,20 +844,39 @@ const StayPage: React.FC = () => {
         >
           <Input />
         </Form.Item>
+
         <Form.Item name="price" label="Price" rules={[{ required: true }]}>
           <InputNumber defaultValue={0} />
         </Form.Item>
-        <Form.Item name="address" label="Address" rules={[{ required: true }]}>
-          <PlacePicker
-            onPlaceSelect={(val: string) => form.setFieldValue("address", val)}
-            placeholder="Search Address"
+
+        <Form.Item
+          label="Address"
+          name="address"
+          rules={[{ required: true, message: "Please input address!" }]}
+        >
+          <OSMAutocomplete
+            placeholder="Search for an address"
+            onChange={(val) => form.setFieldValue('address', val)}
+            onSelect={(val, option) => {
+              console.log("Selected Address:", val, option);
+              form.setFieldValue('address', val);
+              if (option.lat && option.lon) {
+                setCoordinates({ lat: parseFloat(option.lat), lon: parseFloat(option.lon) });
+                console.log("Coordinates Set:", option.lat, option.lon);
+              }
+            }}
           />
         </Form.Item>
         <Form.Item name="city" label="City" rules={[{ required: true }]}>
-          <PlacePicker
-            type="(cities)"
-            onPlaceSelect={(val: string) => form.setFieldValue("city", val)}
-            placeholder="Search City"
+          <Select
+            showSearch
+            placeholder="Select a city"
+            optionFilterProp="label"
+            onChange={handleAutopopulate}
+            options={CityData?.map((city) => ({
+              value: city.id,
+              label: city.name,
+            }))}
           />
         </Form.Item>
         <Form.Item name="state" label="State" rules={[{ required: true }]}>
