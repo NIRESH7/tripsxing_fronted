@@ -175,6 +175,7 @@ const StayPage: React.FC = () => {
       title: "Contact",
       dataIndex: "contact",
       key: "contact",
+      render: (contact: string[]) => Array.isArray(contact) ? contact.join(", ") : contact,
     },
     // {
     //   title: "Email",
@@ -840,13 +841,41 @@ const StayPage: React.FC = () => {
         <Form.Item
           name="contact"
           label="Contact Number"
-          rules={[{ required: true }]}
+          rules={[
+            { required: true },
+            {
+              validator: (_, value) => {
+                if (!value || value.length === 0) {
+                  return Promise.resolve();
+                }
+                const invalidNumbers = value.filter((num: string) => !/^\d{10}$/.test(num));
+                if (invalidNumbers.length > 0) {
+                  return Promise.reject(new Error(`Invalid number(s): ${invalidNumbers.join(", ")}. Must be 10 digits.`));
+                }
+                return Promise.resolve();
+              }
+            }
+          ]}
         >
           <Select
             mode="tags"
             style={{ width: '100%' }}
             placeholder="Enter contact numbers"
             tokenSeparators={[',']}
+            tagRender={(props) => {
+              const { label, value, closable, onClose } = props;
+              const isInvalid = !/^\d{10}$/.test(label as string);
+              return (
+                <Tag
+                  color={isInvalid ? "error" : "cyan"}
+                  closable={closable}
+                  onClose={onClose}
+                  style={{ marginRight: 3 }}
+                >
+                  {label}
+                </Tag>
+              );
+            }}
           />
         </Form.Item>
 
