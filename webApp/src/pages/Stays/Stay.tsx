@@ -1095,6 +1095,7 @@ const StayPage: React.FC = () => {
       title={<span>View Stay</span>}
       open={visible}
       onCancel={onCancel}
+      destroyOnClose={true} // Reset form when closed
       footer={[
         <Button key="back" onClick={onCancel}>
           Close
