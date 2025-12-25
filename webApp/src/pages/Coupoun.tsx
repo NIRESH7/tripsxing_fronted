@@ -262,8 +262,9 @@ export default function Coupon() {
             <div className="bg-yellow-400 p-4 flex flex-col justify-between sm:w-3/4 w-full">
               <div>
                 <h2 className="text-white text-xl sm:text-3xl font-bold break-all whitespace-normal overflow-hidden line-clamp-2">
-                  Name - {coupon.name.toUpperCase()}
+                  {coupon.name.toUpperCase()}
                 </h2>
+
                 <p className="text-white text-sm">
                   Total Claimed: {coupon.user.length}
                 </p>
