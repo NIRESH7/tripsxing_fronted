@@ -59,6 +59,18 @@ const Users: React.FC = () => {
       ).CurrentUserData.id
   );
   const [form] = Form.useForm();
+  const [searchText, setSearchText] = useState("");
+
+  const filteredUsers = users?.filter((user) => {
+    const value = searchText.toLowerCase();
+    return (
+      user.id?.toString().toLowerCase().includes(value) ||
+      user.userName?.toLowerCase().includes(value) ||
+      user.email?.toLowerCase().includes(value) ||
+      user.role?.toLowerCase().includes(value) ||
+      user.status?.toLowerCase().includes(value)
+    );
+  }) || [];
 
   const openModal = (mode: "view" | "edit" | "create", user?: User) => {
     setModalMode(mode);
@@ -403,27 +415,32 @@ const Users: React.FC = () => {
       </Modal>
       <div style={{ padding: "20px" }}>
         {contextHolder}
-        <div
-          className="
-                flex gap-4
-            "
-        >
-          <Button
-            type="primary"
-            style={{ marginBottom: "20px" }}
-            onClick={() => openModal("create")}
-            icon={<PlusOutlined />}
-          >
-            Create User
-          </Button>
-          <Button
-            type="text"
-            className="bg-red-500 text-white border-none rounded-md px-4 py-2 hover:bg-red-600"
-            onClick={() => handleDeleteClick()}
-            icon={<DeleteOutlined />}
-          >
-            Delete User
-          </Button>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex gap-4">
+            <Button
+              type="primary"
+              onClick={() => openModal("create")}
+              icon={<PlusOutlined />}
+            >
+              Create User
+            </Button>
+            <Button
+              type="text"
+              className="bg-red-500 text-white border-none rounded-md px-4 py-2 hover:bg-red-600"
+              onClick={() => handleDeleteClick()}
+              icon={<DeleteOutlined />}
+            >
+              Delete User
+            </Button>
+          </div>
+          <div>
+            <Input.Search
+              placeholder="Search by ID, Username, Email, Role, or Status"
+              allowClear
+              onChange={(e) => setSearchText(e.target.value)}
+              style={{ width: 300 }}
+            />
+          </div>
         </div>
         <Table
           columns={[
@@ -541,7 +558,7 @@ const Users: React.FC = () => {
               ),
             },
           ]}
-          dataSource={users}
+          dataSource={filteredUsers}
           loading={isLoading}
           scroll={{ x: 1300 }}
           rowKey="id"
