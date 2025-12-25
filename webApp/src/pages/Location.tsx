@@ -990,7 +990,7 @@ const Location: React.FC = () => {
         columns={columns && columns[activeTab]}
         dataSource={dataSource()}
         loading={CountryDataLoading || StateDataLoading || CityDataLoading}
-        scroll={{ x: "auto" }}
+        scroll={{ x: 1300 }}
         size="small"
         pagination={{
           pageSize: 10,

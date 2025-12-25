@@ -111,6 +111,7 @@ const UserCouponHistory = () => {
                         pagination={false}
                         rowKey={(coupon: any) => `${record.id}-${coupon.name}-${coupon.expireDate}`}
                         size="small"
+                        scroll={{ x: 1300 }}
                     />
                 </div>
             );
@@ -207,6 +208,7 @@ const UserCouponHistory = () => {
                 columns={columns}
                 dataSource={userCouponData}
                 loading={isLoading}
+                scroll={{ x: "max-content" }}
                 rowKey="id"
                 expandable={expandableConfig}
                 pagination={false}

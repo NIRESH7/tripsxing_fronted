@@ -147,6 +147,7 @@ const UserStayHistory = () => {
                 dataSource={stayHistoryData}
                 loading={isHistoryLoading}
                 rowKey={(record: any) => `${record.stay?.id || record.id}-${record.date}`}
+                scroll={{ x: 1300 }}
             />
         </Card>
     );

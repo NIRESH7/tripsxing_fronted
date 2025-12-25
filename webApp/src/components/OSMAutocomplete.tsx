@@ -23,7 +23,7 @@ interface OSMSuggestion {
 
 const OSMAutocomplete: React.FC<OSMAutocompleteProps> = ({ value, onChange, onSelect, placeholder, style }) => {
     const [options, setOptions] = useState<{ value: string; label: string; lat: string; lon: string }[]>([]);
-    const [loading, setLoading] = useState(false);
+
 
     const fetchSuggestions = debounce(async (searchText: string) => {
         if (!searchText) {
@@ -31,7 +31,6 @@ const OSMAutocomplete: React.FC<OSMAutocompleteProps> = ({ value, onChange, onSe
             return;
         }
 
-        setLoading(true);
         try {
             const response = await axios.get(API_ENDPOINT, {
                 params: {
@@ -50,8 +49,6 @@ const OSMAutocomplete: React.FC<OSMAutocompleteProps> = ({ value, onChange, onSe
             }
         } catch (error) {
             console.error('Error fetching address suggestions:', error);
-        } finally {
-            setLoading(false);
         }
     }, 300); // Faster debounce
 

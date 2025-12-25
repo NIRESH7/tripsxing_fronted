@@ -4,6 +4,8 @@
 
 body {
   margin: 0px;
+  min-width: 1300px; /* Force minimum width to ensure horizontal scrolling on mobile */
+  overflow-x: auto;
 }
 
 /* .table-row-light {

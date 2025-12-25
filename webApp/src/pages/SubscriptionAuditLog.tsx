@@ -291,6 +291,7 @@ const SubscriptionAuditLog: React.FC = () => {
           dataSource={data}
           rowKey="id"
           size="small"
+          scroll={{ x: 1300 }}
           pagination={{
             pageSize: pageSize,
             onShowSizeChange: (_: any, size: any) => {

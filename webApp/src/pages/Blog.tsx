@@ -758,6 +758,7 @@ const Blog: React.FC = () => {
         }))}
         rowKey="id"
         loading={blogsLoading}
+        scroll={{ x: 1300 }}
         pagination={{
           pageSize: pageSize,
           showSizeChanger: true,

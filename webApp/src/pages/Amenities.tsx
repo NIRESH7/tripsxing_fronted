@@ -423,6 +423,7 @@ const Amenities: React.FC = () => {
         columns={columns}
         dataSource={amenities}
         rowKey="id"
+        scroll={{ x: 1300 }}
         size="small"
         pagination={{
           pageSize: pageSize,
@@ -467,18 +468,18 @@ const Amenities: React.FC = () => {
         footer={
           modalState.mode === "view"
             ? [
-                <Button key="close" onClick={closeModal}>
-                  Close
-                </Button>,
-              ]
+              <Button key="close" onClick={closeModal}>
+                Close
+              </Button>,
+            ]
             : [
-                <Button key="cancel" onClick={closeModal}>
-                  Close
-                </Button>,
-                <Button key="submit" type="primary" onClick={handleOk}>
-                  {modalState.mode === "edit" ? "Save" : "Create"}
-                </Button>,
-              ]
+              <Button key="cancel" onClick={closeModal}>
+                Close
+              </Button>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                {modalState.mode === "edit" ? "Save" : "Create"}
+              </Button>,
+            ]
         }
       >
         <Form form={form} layout="vertical">

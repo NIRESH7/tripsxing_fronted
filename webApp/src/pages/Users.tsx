@@ -543,6 +543,7 @@ const Users: React.FC = () => {
           ]}
           dataSource={users}
           loading={isLoading}
+          scroll={{ x: 1300 }}
           rowKey="id"
           size="small"
           pagination={{

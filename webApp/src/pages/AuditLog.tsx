@@ -247,7 +247,8 @@ const AuditLog: React.FC = () => {
             `${range[0]} - ${range[1]} of ${total} items`,
         }}
         size="small"
-        className="shadow-sm rounded-lg overflow-hidden"
+        className="shadow-sm rounded-lg"
+        scroll={{ x: 1300 }}
       />
     </div>
   );
