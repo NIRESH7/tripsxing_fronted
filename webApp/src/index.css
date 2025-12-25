@@ -4,8 +4,6 @@
 
 body {
   margin: 0px;
-  min-width: 1300px; /* Force minimum width to ensure horizontal scrolling on mobile */
-  overflow-x: auto;
 }
 
 /* .table-row-light {
@@ -41,6 +39,7 @@ table tr:nth-child(2n) td {
 }
 
 navbar-menu {
+
   /* color: white !important; */
   .ant-menu-light .ant-menu-submenu-title {
     color: white !important;
