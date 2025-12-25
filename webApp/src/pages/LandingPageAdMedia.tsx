@@ -78,7 +78,7 @@ const SortableItem = ({ item, onDelete }: { item: any; onDelete?: (id: number) =
                         }
                     }
                 }} />,
-                onDelete && <DeleteOutlined key="delete" onClick={handleDelete} />
+                onDelete && <DeleteOutlined key="delete" onClick={handleDelete} onPointerDown={(e) => e.stopPropagation()} />
                 ].filter(Boolean)}
             >
                 {item.type === 'image' ? (
