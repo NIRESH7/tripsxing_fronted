@@ -164,8 +164,8 @@ const Users: React.FC = () => {
         content: modalMode === "edit" ? "Updating User..." : "Creating User...",
         key: "updatable",
       }),
-    onSettledCallback: (data: ApiResponse<User>) => {
-      if (data.statusCode === 200) {
+    onSettledCallback: (data: any) => {
+      if (data?.statusCode === 200) {
         messageApi.success({
           content: data.message,
           key: "updatable",
@@ -174,7 +174,7 @@ const Users: React.FC = () => {
         closeModal();
       } else {
         messageApi.error({
-          content: data.message,
+          content: data?.response?.data?.message || data?.message || "Failed to save User",
           key: "updatable",
           duration: 2,
         });
