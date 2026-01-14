@@ -1,6 +1,7 @@
 export const constant = {
     primaryColor: '#243271',
     secondaryColor: '#243271',
+    pinkColor: '#FF69B4',
     whiteColor: '#FFFFFF',
     blackColor: '#000000',
     theme_light: 'light',

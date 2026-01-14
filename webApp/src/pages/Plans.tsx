@@ -365,7 +365,7 @@ const Plans: React.FC = () => {
           <Form.Item
             name="titleDescription"
             label="Title Description"
-            // rules={[{ required: true, message: 'Please input the renewal period!' }]}
+          // rules={[{ required: true, message: 'Please input the renewal period!' }]}
           >
             <Input />
           </Form.Item>

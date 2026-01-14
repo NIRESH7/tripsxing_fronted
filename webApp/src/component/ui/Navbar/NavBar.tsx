@@ -210,7 +210,7 @@ const Navbar: React.FC<{
                   >
                     <Avatar
                       style={{
-                        backgroundColor: constant.secondaryColor as string,
+                        backgroundColor: constant.pinkColor as string,
                       }}
                     >
                       {CurrentUserData.name ? (
@@ -342,7 +342,7 @@ const Navbar: React.FC<{
                   >
                     <Avatar
                       style={{
-                        backgroundColor: constant.secondaryColor as string,
+                        backgroundColor: constant.pinkColor as string,
                       }}
                     >
                       {CurrentUserData.name ? (

@@ -398,7 +398,11 @@ const Reel = () => {
       {/* Add Reel Modal */}
       <Modal title="Add Reel" open={isAddOpen} onOk={handleOk} onCancel={handleCancel}>
         <Form form={AddForm} layout="vertical">
-          <Form.Item name="description" label="Description">
+          <Form.Item
+            name="description"
+            label="Description *"
+            rules={[{ required: true, message: 'Please enter a description' }]}
+          >
             <Input.TextArea />
           </Form.Item>
           <Form.Item name="videos" label="Upload Reel">
